@@ -16,32 +16,6 @@ from scipy.signal import butter, lfilter, hilbert, chirp
 from statsmodels.tsa.stattools import adfuller
 
 
- #%% 
-#data=open("C:/Users/mhele/OneDrive/Ambiente de Trabalho/DTU/2nd year/4rd semester/Special course/Code/Jiayi's code/OrderedFiles/F01.csv")
-#csvreader=csv.reader(data)
-#
-#rows = []
-#for row in csvreader:
-#    rows.append(row)
-#
-#rows=np.array(rows)
-#
-#time=[]
-#for elem in rows[:,0]:
-#    time.append(float(elem))
-#
-##emg=[]
-##for elem in rows[:,7]: #column 8 is the EMG
-##    emg.append(float(elem))
-#    
-#
-##For jiayi's files
-#emg=[]
-#for elem in rows[:,1]: #column 2 is the EMG
-#    emg.append(float(elem))
-
-
- 
  #%%   
 def plt_time(emg):   
     #Time domain plot
@@ -54,22 +28,15 @@ def plt_time(emg):
 def plt_freq(emg):
     fs=2000 
     #Frequency domain plot
-#    fourier_transform = np.fft.rfft(emg)
-#    abs_fourier_transform = np.abs(fourier_transform)
-#    power_spectrum = np.square(abs_fourier_transform)
-#    #frequency = np.linspace(0, fs/2, len(power_spectrum))
-#    time_step=1/fs
-#    freqs = np.fft.fftfreq(len(emg), time_step)
-#    idx=np.argsort(freqs)
-    
-    plt.figure()
-    f, Pxx_den = signal.periodogram(emg, fs)
-    plt.semilogy(f, Pxx_den)
-    plt.xlabel('frequency [Hz]')
-    plt.ylabel('PSD [V**2/Hz]')
-    plt.show()
-   
+    fourier_transform = np.fft.rfft(emg)
+    abs_fourier_transform = np.abs(fourier_transform)
+    power_spectrum = np.square(abs_fourier_transform)
+    #frequency = np.linspace(0, fs/2, len(power_spectrum))
+    time_step=1/fs
+    freqs = np.fft.fftfreq(len(emg), time_step)
+    idx=np.argsort(freqs)
 
+   
  #%%  
 #emg_cut=0
 
@@ -121,7 +88,6 @@ def removeMVCs(emg):
     
     return  emg_cut ,  nSecCut_init, nSecCut_end
 
-# emg_cut ,  nSecCut_init, nSecCut_end=removeMVCs(emg)
 
  #%%
 #def filtering(nSecCut_init, nSecCut_end, emg_cut, time):
@@ -135,10 +101,7 @@ def filtering(emg_cut):
     #time_cut=time_cut_init[0:(len(time_cut_init)- nSecCut_end -1)]
     #time_cut=time[0:(len(time)-nSecCut_end-1)] #only remove the last MVC on sub3
     
-    #time_cut=time[0:(len(time)-nSecCut_end-1)] #remove last 30s from F06 and F08 Jiayi
-    
-   
-    
+    #time_cut=time[0:(len(time)-nSecCut_end-1)] #remove last 30s from F06 and F08 Jiayi 
     
     # create bandpass filter for EMG
     low = 5/(2000/2)
@@ -159,112 +122,9 @@ def filtering(emg_cut):
    
     return emg_cut, emg_correctmean,emg_filtered,emg_normalized
     #return emg_cut, emg_correctmean,emg_filtered,emg_normalized, time_cut
+   
     
-#emg_cut, emg_correctmean,emg_filtered,emg_normalized=filtering(emg_cut)
-    
-def plot_filtering(emg,emg_cut, emg_correctmean,emg_filtered,emg_normalized):
-    
-#     # plot comparison of EMG with offset vs mean-corrected values
-#    plt.figure()
-#    plt.subplot(1, 2, 1)
-#    plt.subplot(1, 2, 1).set_title('Mean offset present')
-#    #plt.plot(time_cut, emg_cut)
-#    plt.plot(emg_cut)
-#    plt.locator_params(axis='x', nbins=4)
-#    plt.locator_params(axis='y', nbins=4)
-#    plt.ylim(np.amin(emg_cut), np.amax(emg_cut))
-#    plt.xlabel('Time (sec)')
-#    plt.ylabel('EMG (a.u.)')
-#    
-#    plt.subplot(1, 2, 2)
-#    plt.subplot(1, 2, 2).set_title('Mean-corrected values')
-#    #plt.plot(time_cut, emg_correctmean)
-#    plt.plot( emg_correctmean)
-#    plt.locator_params(axis='x', nbins=4)
-#    plt.locator_params(axis='y', nbins=4)
-#    plt.ylim(np.amin(emg_correctmean), np.amax(emg_correctmean))
-#    plt.xlabel('Time (sec)')
-#    plt.ylabel('EMG (a.u.)')
-#    
-#    # plot comparison of unfiltered vs filtered mean-corrected EMG
-#    plt.figure()
-#    plt.subplot(1, 2, 1)
-#    plt.subplot(1, 2, 1).set_title('Unfiltered EMG')
-#    #plt.plot(time_cut, emg_correctmean)
-#    plt.plot(emg_correctmean)
-#    plt.locator_params(axis='x', nbins=4)
-#    plt.locator_params(axis='y', nbins=4)
-#    plt.ylim(np.amin(emg_correctmean), np.amax(emg_correctmean))
-#    plt.xlabel('Time (sec)')
-#    plt.ylabel('EMG (a.u.)')
-#    
-#    plt.subplot(1, 2, 2)
-#    plt.subplot(1, 2, 2).set_title('Filtered EMG')
-#    #plt.plot(time_cut, emg_filtered)
-#    plt.plot(emg_filtered)
-#    plt.locator_params(axis='x', nbins=4)
-#    plt.locator_params(axis='y', nbins=4)
-#    plt.ylim(np.amin(emg_filtered), np.amax(emg_filtered))
-#    plt.xlabel('Time (sec)')
-#    plt.ylabel('EMG (a.u.)')
-#
-## plot comparison of Unnormalized(after filtering) vs Normalized EMG
-#    plt.figure()
-#    plt.subplot(1, 2, 1)
-#    plt.subplot(1, 2, 1).set_title('Unnormalized EMG')
-#    #plt.plot(time_cut, emg_filtered)
-#    plt.plot(emg_filtered)
-#    plt.locator_params(axis='x', nbins=4)
-#    plt.locator_params(axis='y', nbins=4)
-#    plt.ylim(np.amin(emg_filtered), np.amax(emg_filtered))
-#    plt.xlabel('Time (sec)')
-#    plt.ylabel('EMG (a.u.)')
-#    
-#    plt.subplot(1, 2, 2)
-#    plt.subplot(1, 2, 2).set_title('Normalized EMG')
-#    #plt.plot(time_cut, emg_normalized)
-#    plt.plot(emg_normalized)
-#    plt.locator_params(axis='x', nbins=4)
-#    plt.locator_params(axis='y', nbins=4)
-#    plt.ylim(np.amin(emg_normalized), np.amax(emg_normalized))
-#    plt.xlabel('Time (sec)')
-#    plt.ylabel('EMG (a.u.)')
-
-
-#    plt.figure()
-#    plt.subplot(4,1,1)
-#    plt.subplot(4,1,1).set_title('Mean offset present')
-#    plt.plot(emg_cut)
-#    plt.locator_params(axis='x', nbins=4)
-#    plt.locator_params(axis='y', nbins=4)
-#    plt.ylim(np.amin(emg_cut), np.amax(emg_cut))
-#    plt.xlabel('Time (sec)')
-#    plt.ylabel('EMG (a.u.)')
-#    plt.subplot(4,1,2)
-#    plt.subplot(4,1,2).set_title('Mean-corrected values')
-#    plt.plot( emg_correctmean)
-#    plt.locator_params(axis='x', nbins=4)
-#    plt.locator_params(axis='y', nbins=4)
-#    plt.ylim(np.amin(emg_correctmean), np.amax(emg_correctmean))
-#    plt.xlabel('Time (sec)')
-#    plt.ylabel('EMG (a.u.)')
-#    plt.subplot(4,1,3)
-#    plt.subplot(4,1,3).set_title('Filtered EMG')
-#    plt.plot(emg_filtered)
-#    plt.locator_params(axis='x', nbins=4)
-#    plt.locator_params(axis='y', nbins=4)
-#    plt.ylim(np.amin(emg_filtered), np.amax(emg_filtered))
-#    plt.xlabel('Time (sec)')
-#    plt.ylabel('EMG (a.u.)')
-#    plt.subplot(4,1,4)
-#    plt.subplot(4,1,4).set_title('Normalized EMG')
-#    plt.plot(emg_normalized)
-#    plt.locator_params(axis='x', nbins=4)
-#    plt.locator_params(axis='y', nbins=4)
-#    plt.ylim(np.amin(emg_normalized), np.amax(emg_normalized))
-#    plt.xlabel('Time (sec)')
-#    plt.ylabel('EMG (a.u.)')
-    
+def plot_filtering(emg,emg_cut, emg_correctmean,emg_filtered,emg_normalized):       
     plt.figure()
     plt.subplot(1,4,1)
     plt.subplot(1,4,1).set_title('Raw EMG')
@@ -281,7 +141,6 @@ def plot_filtering(emg,emg_cut, emg_correctmean,emg_filtered,emg_normalized):
     plt.locator_params(axis='y', nbins=4)
     plt.ylim(np.amin(emg_correctmean), np.amax(emg_correctmean))
     plt.xlabel('Time (sec)')
-    #plt.ylabel('EMG (a.u.)')
     plt.subplot(1,4,3)
     plt.subplot(1,4,3).set_title('Filtered EMG')
     plt.plot(emg_filtered)
@@ -289,7 +148,6 @@ def plot_filtering(emg,emg_cut, emg_correctmean,emg_filtered,emg_normalized):
     plt.locator_params(axis='y', nbins=4)
     plt.ylim(np.amin(emg_filtered), np.amax(emg_filtered))
     plt.xlabel('Time (sec)')
-    #plt.ylabel('EMG (a.u.)')
     plt.subplot(1,4,4)
     plt.subplot(1,4,4).set_title('Normalized EMG')
     plt.plot(emg_normalized)
@@ -297,6 +155,4 @@ def plot_filtering(emg,emg_cut, emg_correctmean,emg_filtered,emg_normalized):
     plt.locator_params(axis='y', nbins=4)
     plt.ylim(np.amin(emg_normalized), np.amax(emg_normalized))
     plt.xlabel('Time (sec)')
-    #plt.ylabel('EMG (a.u.)')
     
-#plot_filtering(emg, emg_correctmean,emg_filtered,emg_normalized)
